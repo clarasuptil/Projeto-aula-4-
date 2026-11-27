@@ -5,8 +5,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>Conect@ Segura</title>
+
     <link rel="stylesheet" href="style.css">
+    <script src="script.js" defer></script>
 </head>
 
 <body>
@@ -15,7 +18,7 @@
         <h1>Conect@ Segura</h1>
         <p>Conhecimento também é proteção!</p>
 
-        <nav>
+        <nav aria-label="Menu principal">
             <a href="#inicio">Início</a>
             <a href="#lgpd">LGPD</a>
             <a href="#marco">Marco Civil</a>
@@ -23,40 +26,43 @@
             <a href="#dicas">Dicas</a>
         </nav>
 
-        <!-- MENU DE ACESSIBILIDADE -->
         <div class="acessibilidade" aria-label="Ferramentas de acessibilidade">
 
-            <button id="diminuirFonte" type="button" aria-label="Diminuir texto">
+            <button id="diminuirFonte" type="button"
+                aria-label="Diminuir tamanho do texto">
                 A−
             </button>
 
-            <button id="aumentarFonte" type="button" aria-label="Aumentar texto">
+            <button id="aumentarFonte" type="button"
+                aria-label="Aumentar tamanho do texto">
                 A+
             </button>
 
-            <button id="ouvirPagina" type="button" aria-label="Ouvir página">
+            <button id="ouvirPagina" type="button"
+                aria-label="Ouvir página" aria-pressed="false">
                 🔊
             </button>
 
         </div>
 
         <p id="estadoLeitura" aria-live="polite"></p>
-
     </header>
 
-    <main>
+    <main id="conteudoPrincipal">
 
         <section id="inicio" class="inicio">
             <h2>Seja bem-vindo ao mundo digital seguro!</h2>
 
             <p>
                 A internet faz parte da nossa rotina, mas é importante
-                saber como proteger nossos dados e reconhecer possíveis golpes.
-                Conhecer nossos direitos é o primeiro passo para navegar
-                com mais segurança.
+                saber como proteger nossos dados e reconhecer possíveis
+                golpes. Conhecer nossos direitos é o primeiro passo
+                para navegar com mais segurança.
             </p>
 
-            <a href="#lgpd" class="botao">Conheça seus direitos</a>
+            <a href="#lgpd" class="botao">
+                Conheça seus direitos
+            </a>
         </section>
 
         <section class="introducao">
@@ -72,7 +78,6 @@
 
         <section id="lgpd" class="conteudo">
             <h2>01. LGPD</h2>
-
             <h3>Lei Geral de Proteção de Dados</h3>
 
             <p>
@@ -92,6 +97,7 @@
 
             <div class="destaque">
                 <strong>Você sabia?</strong>
+
                 <p>
                     Empresas precisam respeitar as regras de proteção
                     de dados e informar como utilizam suas informações.
@@ -101,7 +107,6 @@
 
         <section id="marco" class="conteudo">
             <h2>02. Marco Civil da Internet</h2>
-
             <h3>Seus direitos no ambiente digital</h3>
 
             <p>
@@ -121,6 +126,7 @@
 
             <div class="destaque">
                 <strong>Na prática:</strong>
+
                 <p>
                     Você tem direito à privacidade e à proteção
                     das suas informações no ambiente digital.
@@ -130,7 +136,6 @@
 
         <section id="consumidor" class="conteudo">
             <h2>03. Código de Defesa do Consumidor</h2>
-
             <h3>Proteção nas compras pela internet</h3>
 
             <p>
@@ -153,6 +158,7 @@
 
             <div class="destaque">
                 <strong>Fique atento!</strong>
+
                 <p>
                     Antes de comprar pela internet, confira a reputação
                     da loja e as informações do produto.
@@ -163,7 +169,9 @@
         <section id="dicas" class="conteudo">
             <h2>04. Como evitar golpes digitais?</h2>
 
-            <p>Confira algumas atitudes que ajudam a proteger você:</p>
+            <p>
+                Confira algumas atitudes que ajudam a proteger você:
+            </p>
 
             <ul>
                 <li>Não clique em links suspeitos;</li>
@@ -175,7 +183,6 @@
             </ul>
         </section>
 
-        <!-- QUIZ INTERATIVO -->
         <section class="quiz">
             <h2>Teste seus conhecimentos! 💗</h2>
 
@@ -184,11 +191,11 @@
                 e pede para clicar em um link. O que você deve fazer?
             </p>
 
-            <button type="button" onclick="responder(false)">
+            <button id="respostaErrada" type="button">
                 Clicar imediatamente
             </button>
 
-            <button type="button" onclick="responder(true)">
+            <button id="respostaCerta" type="button">
                 Desconfiar e verificar a mensagem
             </button>
 
@@ -203,8 +210,5 @@
         <p>Projeto educativo • 2026</p>
     </footer>
 
-    <script src="script.js"></script>
-
 </body>
-
 </html>
