@@ -22,23 +22,26 @@
             <a href="#consumidor">Consumidor</a>
             <a href="#dicas">Dicas</a>
         </nav>
-        
-<div class="acessibilidade" aria-label="Ferramentas de acessibilidade">
-    <button id="diminuirFonte" type="button" aria-label="Diminuir texto">
-        A−
-    </button>
 
-    <button id="aumentarFonte" type="button" aria-label="Aumentar texto">
-        A+
-    </button>
+        <!-- MENU DE ACESSIBILIDADE -->
+        <div class="acessibilidade" aria-label="Ferramentas de acessibilidade">
 
-    <button id="ouvirPagina" type="button" aria-label="Ouvir página">
-        🔊
-    </button>
-</div>
+            <button id="diminuirFonte" type="button" aria-label="Diminuir texto">
+                A−
+            </button>
 
-<p id="estadoLeitura" aria-live="polite"></p>
-        
+            <button id="aumentarFonte" type="button" aria-label="Aumentar texto">
+                A+
+            </button>
+
+            <button id="ouvirPagina" type="button" aria-label="Ouvir página">
+                🔊
+            </button>
+
+        </div>
+
+        <p id="estadoLeitura" aria-live="polite"></p>
+
     </header>
 
     <main>
@@ -172,6 +175,7 @@
             </ul>
         </section>
 
+        <!-- QUIZ INTERATIVO -->
         <section class="quiz">
             <h2>Teste seus conhecimentos! 💗</h2>
 
@@ -180,15 +184,15 @@
                 e pede para clicar em um link. O que você deve fazer?
             </p>
 
-            <button onclick="responder(false)">
+            <button type="button" onclick="responder(false)">
                 Clicar imediatamente
             </button>
 
-            <button onclick="responder(true)">
+            <button type="button" onclick="responder(true)">
                 Desconfiar e verificar a mensagem
             </button>
 
-            <p id="resultado"></p>
+            <p id="resultado" aria-live="polite"></p>
         </section>
 
     </main>
@@ -202,4 +206,5 @@
     <script src="script.js"></script>
 
 </body>
+
 </html>
