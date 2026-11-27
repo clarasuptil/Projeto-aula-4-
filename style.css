@@ -1,0 +1,234 @@
+
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    scroll-behavior: smooth;
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+    background-color: #fff6f9;
+    color: #654653;
+    line-height: 1.7;
+}
+
+/* CABEÇALHO */
+
+header {
+    background: linear-gradient(135deg, #f3b8cd, #f9dce7);
+    text-align: center;
+    padding: 35px 20px;
+}
+
+header h1 {
+    color: #a34f72;
+    font-size: 38px;
+}
+
+header p {
+    color: #985c76;
+    margin-bottom: 20px;
+}
+
+nav {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 12px;
+}
+
+nav a {
+    text-decoration: none;
+    color: #914d69;
+    background-color: white;
+    padding: 9px 16px;
+    border-radius: 20px;
+    font-size: 13px;
+    transition: 0.3s;
+}
+
+nav a:hover {
+    background-color: #d989a9;
+    color: white;
+}
+
+/* CONTEÚDO PRINCIPAL */
+
+main {
+    max-width: 1000px;
+    margin: auto;
+    padding: 30px 20px;
+}
+
+.inicio {
+    background: linear-gradient(135deg, #f8dce7, #fff0f5);
+    text-align: center;
+    padding: 55px 30px;
+    border-radius: 22px;
+    margin-bottom: 30px;
+}
+
+.inicio h2 {
+    color: #a34f72;
+    font-size: 27px;
+    margin-bottom: 15px;
+}
+
+.inicio p {
+    max-width: 700px;
+    margin: auto;
+}
+
+.botao {
+    display: inline-block;
+    margin-top: 25px;
+    background-color: #cb7899;
+    color: white;
+    padding: 12px 25px;
+    text-decoration: none;
+    border-radius: 25px;
+    transition: 0.3s;
+}
+
+.botao:hover {
+    background-color: #a95176;
+}
+
+/* INTRODUÇÃO */
+
+.introducao {
+    background-color: white;
+    padding: 30px;
+    border-radius: 18px;
+    margin-bottom: 25px;
+}
+
+.introducao h2 {
+    color: #b25f82;
+    margin-bottom: 12px;
+}
+
+/* SEÇÕES */
+
+.conteudo {
+    background-color: white;
+    padding: 30px;
+    border-radius: 18px;
+    margin-bottom: 25px;
+    border-left: 5px solid #e8a7c0;
+}
+
+.conteudo h2 {
+    color: #ae5c7e;
+    font-size: 24px;
+    margin-bottom: 8px;
+}
+
+.conteudo h3 {
+    color: #c47b98;
+    margin-bottom: 15px;
+}
+
+.conteudo ul {
+    padding-left: 25px;
+    margin: 12px 0;
+}
+
+.conteudo li {
+    margin-bottom: 7px;
+}
+
+/* DESTAQUES */
+
+.destaque {
+    background-color: #fff0f5;
+    border-radius: 12px;
+    padding: 18px;
+    margin-top: 20px;
+}
+
+.destaque strong {
+    color: #a34f72;
+}
+
+/* QUIZ */
+
+.quiz {
+    background-color: #f8dce7;
+    padding: 30px;
+    border-radius: 18px;
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.quiz h2 {
+    color: #a34f72;
+    margin-bottom: 15px;
+}
+
+.quiz button {
+    display: block;
+    width: 100%;
+    max-width: 450px;
+    margin: 12px auto;
+    padding: 13px;
+    border: none;
+    border-radius: 12px;
+    background-color: white;
+    color: #96516f;
+    font-family: inherit;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.quiz button:hover {
+    background-color: #d98eac;
+    color: white;
+}
+
+#resultado {
+    margin-top: 15px;
+    font-weight: 600;
+}
+
+/* RODAPÉ */
+
+footer {
+    background-color: #eec2d3;
+    text-align: center;
+    padding: 30px 15px;
+    color: #874e67;
+}
+
+footer h2 {
+    margin-bottom: 8px;
+}
+
+/* RESPONSIVIDADE */
+
+@media (max-width: 600px) {
+
+    header h1 {
+        font-size: 29px;
+    }
+
+    .inicio {
+        padding: 35px 20px;
+    }
+
+    .inicio h2 {
+        font-size: 22px;
+    }
+
+    .conteudo {
+        padding: 22px;
+    }
+
+    nav {
+        gap: 8px;
+    }
+
+}
