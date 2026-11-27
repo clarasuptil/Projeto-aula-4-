@@ -232,3 +232,50 @@ footer h2 {
     }
 
 }
+
+/* FERRAMENTAS DE ACESSIBILIDADE */
+
+.acessibilidade {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 12px;
+    margin-top: 20px;
+}
+
+.acessibilidade button {
+    width: 45px;
+    height: 45px;
+    border: none;
+    border-radius: 50%;
+    background-color: white;
+    color: #a34f72;
+    font-size: 17px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.acessibilidade button:hover {
+    background-color: #a95176;
+    color: white;
+    transform: scale(1.08);
+}
+
+#estadoLeitura {
+    text-align: center;
+    color: #914d69;
+    font-size: 13px;
+    margin-top: 8px;
+}
+
+@media (max-width: 600px) {
+    .acessibilidade {
+        gap: 8px;
+    }
+
+    .acessibilidade button {
+        width: 42px;
+        height: 42px;
+    }
+}
