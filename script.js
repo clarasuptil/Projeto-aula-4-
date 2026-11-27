@@ -1,6 +1,8 @@
 
 let lendo = false;
+let pausado = false;
 let tamanhoFonte = 16;
+let falaAtual = null;
 
 const botaoOuvir = document.getElementById("ouvirPagina");
 const estadoLeitura = document.getElementById("estadoLeitura");
@@ -8,6 +10,8 @@ const estadoLeitura = document.getElementById("estadoLeitura");
 // Finaliza a leitura
 function finalizarLeitura() {
     lendo = false;
+    pausado = false;
+    falaAtual = null;
 
     botaoOuvir.textContent = "🔊";
     botaoOuvir.setAttribute("aria-label", "Ouvir página");
@@ -16,7 +20,7 @@ function finalizarLeitura() {
     estadoLeitura.textContent = "Leitura finalizada.";
 }
 
-// Lê o conteúdo da página em voz alta
+// Inicia, pausa ou continua a leitura
 function lerEmVozAlta() {
 
     if (!("speechSynthesis" in window)) {
@@ -25,19 +29,27 @@ function lerEmVozAlta() {
         return;
     }
 
-    // Se já estiver lendo, pausa ou continua
-    if (lendo === true) {
+    // Se já existe uma leitura
+    if (lendo) {
 
-        if (speechSynthesis.paused === true) {
+        if (pausado) {
             speechSynthesis.resume();
 
+            pausado = false;
+
             botaoOuvir.textContent = "⏸️";
+            botaoOuvir.setAttribute("aria-label", "Pausar leitura");
+
             estadoLeitura.textContent = "Leitura em andamento.";
 
         } else {
             speechSynthesis.pause();
 
+            pausado = true;
+
             botaoOuvir.textContent = "▶️";
+            botaoOuvir.setAttribute("aria-label", "Continuar leitura");
+
             estadoLeitura.textContent = "Leitura pausada.";
         }
 
@@ -45,28 +57,27 @@ function lerEmVozAlta() {
     }
 
     // Seleciona o conteúdo principal
-    let conteudo = document.querySelector("main");
-    let texto = conteudo.innerText;
+    const conteudo = document.querySelector("main");
+    const texto = conteudo.innerText;
 
-    // Cria a fala
-    let fala = new SpeechSynthesisUtterance(texto);
+    falaAtual = new SpeechSynthesisUtterance(texto);
 
-    fala.lang = "pt-BR";
+    falaAtual.lang = "pt-BR";
 
-    fala.onend = finalizarLeitura;
-    fala.onerror = finalizarLeitura;
+    falaAtual.onend = finalizarLeitura;
+    falaAtual.onerror = finalizarLeitura;
 
-    // Cancela qualquer leitura anterior
+    // Cancela leituras anteriores
     speechSynthesis.cancel();
 
-    // Inicia uma nova leitura
-    speechSynthesis.speak(fala);
-
+    // Inicia a leitura
     lendo = true;
+    pausado = false;
+
+    speechSynthesis.speak(falaAtual);
 
     botaoOuvir.textContent = "⏸️";
     botaoOuvir.setAttribute("aria-label", "Pausar leitura");
-    botaoOuvir.setAttribute("aria-pressed", "true");
 
     estadoLeitura.textContent = "Leitura em andamento.";
 }
@@ -74,7 +85,7 @@ function lerEmVozAlta() {
 // Botão de leitura
 botaoOuvir.addEventListener("click", lerEmVozAlta);
 
-// Aumenta o tamanho do texto
+// Aumenta o texto
 document.getElementById("aumentarFonte").addEventListener("click", function() {
 
     if (tamanhoFonte < 22) {
@@ -84,7 +95,7 @@ document.getElementById("aumentarFonte").addEventListener("click", function() {
 
 });
 
-// Diminui o tamanho do texto
+// Diminui o texto
 document.getElementById("diminuirFonte").addEventListener("click", function() {
 
     if (tamanhoFonte > 14) {
@@ -94,7 +105,7 @@ document.getElementById("diminuirFonte").addEventListener("click", function() {
 
 });
 
-// Quiz de segurança digital
+// Quiz
 function responder(correta) {
 
     const resultado = document.getElementById("resultado");
