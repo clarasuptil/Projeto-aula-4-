@@ -1,26 +1,74 @@
 
+// ======================================
+// CONECT@ SEGURA - ACESSIBILIDADE
+// ======================================
+
+let tamanhoFonte = 16;
 let lendo = false;
 let pausado = false;
-let tamanhoFonte = 16;
+let textoCompleto = "";
+let indiceAtual = 0;
 let falaAtual = null;
 
 const botaoOuvir = document.getElementById("ouvirPagina");
 const estadoLeitura = document.getElementById("estadoLeitura");
 
+// Atualiza o botão
+function atualizarBotao(texto, descricao, estado) {
+    botaoOuvir.textContent = texto;
+    botaoOuvir.setAttribute("aria-label", descricao);
+    botaoOuvir.setAttribute("aria-pressed", estado);
+}
+
 // Finaliza a leitura
 function finalizarLeitura() {
     lendo = false;
     pausado = false;
+    indiceAtual = 0;
     falaAtual = null;
 
-    botaoOuvir.textContent = "🔊";
-    botaoOuvir.setAttribute("aria-label", "Ouvir página");
-    botaoOuvir.setAttribute("aria-pressed", "false");
+    atualizarBotao("🔊", "Ouvir página", "false");
 
     estadoLeitura.textContent = "Leitura finalizada.";
 }
 
-// Inicia, pausa ou continua a leitura
+// Inicia a fala a partir de um trecho
+function iniciarFala() {
+
+    if (indiceAtual >= textoCompleto.length) {
+        finalizarLeitura();
+        return;
+    }
+
+    falaAtual = new SpeechSynthesisUtterance(
+        textoCompleto.substring(indiceAtual)
+    );
+
+    falaAtual.lang = "pt-BR";
+
+    falaAtual.onboundary = function(event) {
+        if (event.name === "word") {
+            indiceAtual += event.charLength || 0;
+        }
+    };
+
+    falaAtual.onend = function() {
+        if (!pausado) {
+            finalizarLeitura();
+        }
+    };
+
+    falaAtual.onerror = function(event) {
+        if (event.error !== "canceled" && event.error !== "interrupted") {
+            estadoLeitura.textContent = "Não foi possível continuar a leitura.";
+            finalizarLeitura();
+        }
+    };
+
+    speechSynthesis.speak(falaAtual);
+}
+
+// Botão de leitura
 function lerEmVozAlta() {
 
     if (!("speechSynthesis" in window)) {
@@ -29,63 +77,60 @@ function lerEmVozAlta() {
         return;
     }
 
-    // Se já existe uma leitura
-    if (lendo) {
+    // Se estiver lendo, pausa
+    if (lendo && !pausado) {
 
-        if (pausado) {
-            speechSynthesis.resume();
-
-            pausado = false;
-
-            botaoOuvir.textContent = "⏸️";
-            botaoOuvir.setAttribute("aria-label", "Pausar leitura");
-
-            estadoLeitura.textContent = "Leitura em andamento.";
-
-        } else {
-            speechSynthesis.pause();
-
-            pausado = true;
-
-            botaoOuvir.textContent = "▶️";
-            botaoOuvir.setAttribute("aria-label", "Continuar leitura");
-
-            estadoLeitura.textContent = "Leitura pausada.";
+        if (falaAtual && "charIndex" in falaAtual) {
+            // Guarda uma posição aproximada da leitura
+            indiceAtual = Math.max(indiceAtual, falaAtual.charIndex);
         }
+
+        pausado = true;
+        speechSynthesis.cancel();
+
+        atualizarBotao("▶️", "Continuar leitura", "false");
+        estadoLeitura.textContent = "Leitura pausada.";
 
         return;
     }
 
-    // Seleciona o conteúdo principal
-    const conteudo = document.querySelector("main");
-    const texto = conteudo.innerText;
+    // Se estiver pausada, continua
+    if (lendo && pausado) {
 
-    falaAtual = new SpeechSynthesisUtterance(texto);
+        pausado = false;
 
-    falaAtual.lang = "pt-BR";
+        speechSynthesis.cancel();
 
-    falaAtual.onend = finalizarLeitura;
-    falaAtual.onerror = finalizarLeitura;
+        atualizarBotao("⏸️", "Pausar leitura", "true");
+        estadoLeitura.textContent = "Leitura em andamento.";
 
-    // Cancela leituras anteriores
-    speechSynthesis.cancel();
+        iniciarFala();
 
-    // Inicia a leitura
+        return;
+    }
+
+    // Começa uma nova leitura
+    textoCompleto = document.querySelector("main").innerText;
+    indiceAtual = 0;
     lendo = true;
     pausado = false;
 
-    speechSynthesis.speak(falaAtual);
+    speechSynthesis.cancel();
 
-    botaoOuvir.textContent = "⏸️";
-    botaoOuvir.setAttribute("aria-label", "Pausar leitura");
-
+    atualizarBotao("⏸️", "Pausar leitura", "true");
     estadoLeitura.textContent = "Leitura em andamento.";
+
+    iniciarFala();
 }
 
-// Botão de leitura
+// Conecta o botão de som
 botaoOuvir.addEventListener("click", lerEmVozAlta);
 
-// Aumenta o texto
+
+// ======================================
+// AUMENTAR E DIMINUIR A FONTE
+// ======================================
+
 document.getElementById("aumentarFonte").addEventListener("click", function() {
 
     if (tamanhoFonte < 22) {
@@ -95,7 +140,6 @@ document.getElementById("aumentarFonte").addEventListener("click", function() {
 
 });
 
-// Diminui o texto
 document.getElementById("diminuirFonte").addEventListener("click", function() {
 
     if (tamanhoFonte > 14) {
@@ -105,7 +149,11 @@ document.getElementById("diminuirFonte").addEventListener("click", function() {
 
 });
 
-// Quiz
+
+// ======================================
+// QUIZ DE SEGURANÇA DIGITAL
+// ======================================
+
 function responder(correta) {
 
     const resultado = document.getElementById("resultado");
@@ -118,4 +166,4 @@ function responder(correta) {
             "Ops! Essa pode ser uma tentativa de golpe. Nunca clique sem verificar a mensagem!";
     }
 
-}
+            }
