@@ -1,6 +1,4 @@
 
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
-
 * {
     margin: 0;
     padding: 0;
@@ -9,7 +7,7 @@
 }
 
 body {
-    font-family: 'Poppins', sans-serif;
+    font-family: Arial, Helvetica, sans-serif;
     background-color: #fff6f9;
     color: #654653;
     line-height: 1.7;
@@ -20,33 +18,33 @@ body {
 header {
     background: linear-gradient(135deg, #f3b8cd, #f9dce7);
     text-align: center;
-    padding: 35px 20px;
+    padding: 30px 18px;
 }
 
 header h1 {
     color: #a34f72;
-    font-size: 38px;
+    font-size: 36px;
 }
 
-header p {
+header > p {
     color: #985c76;
-    margin-bottom: 20px;
+    margin-bottom: 18px;
 }
 
 nav {
     display: flex;
     justify-content: center;
     flex-wrap: wrap;
-    gap: 12px;
+    gap: 10px;
 }
 
 nav a {
     text-decoration: none;
     color: #914d69;
     background-color: white;
-    padding: 9px 16px;
+    padding: 8px 15px;
     border-radius: 20px;
-    font-size: 13px;
+    font-size: 14px;
     transition: 0.3s;
 }
 
@@ -55,7 +53,50 @@ nav a:hover {
     color: white;
 }
 
-/* CONTEÚDO PRINCIPAL */
+/* ACESSIBILIDADE */
+
+.acessibilidade {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 12px;
+    margin-top: 20px;
+}
+
+.acessibilidade button {
+    width: 46px;
+    height: 46px;
+    border: none;
+    border-radius: 50%;
+    background-color: white;
+    color: #a34f72;
+    font-size: 17px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.acessibilidade button:hover {
+    background-color: #a95176;
+    color: white;
+}
+
+.acessibilidade button:focus-visible,
+nav a:focus-visible,
+.quiz button:focus-visible,
+.botao:focus-visible {
+    outline: 3px solid #87405f;
+    outline-offset: 3px;
+}
+
+#estadoLeitura {
+    min-height: 24px;
+    margin-top: 8px;
+    font-size: 13px;
+    color: #87405f;
+}
+
+/* CONTEÚDO */
 
 main {
     max-width: 1000px;
@@ -66,9 +107,9 @@ main {
 .inicio {
     background: linear-gradient(135deg, #f8dce7, #fff0f5);
     text-align: center;
-    padding: 55px 30px;
+    padding: 50px 25px;
     border-radius: 22px;
-    margin-bottom: 30px;
+    margin-bottom: 25px;
 }
 
 .inicio h2 {
@@ -84,13 +125,13 @@ main {
 
 .botao {
     display: inline-block;
-    margin-top: 25px;
+    margin-top: 23px;
     background-color: #cb7899;
     color: white;
-    padding: 12px 25px;
+    padding: 12px 24px;
     text-decoration: none;
     border-radius: 25px;
-    transition: 0.3s;
+    transition: 0.2s;
 }
 
 .botao:hover {
@@ -101,21 +142,21 @@ main {
 
 .introducao {
     background-color: white;
-    padding: 30px;
+    padding: 28px;
     border-radius: 18px;
     margin-bottom: 25px;
 }
 
 .introducao h2 {
     color: #b25f82;
-    margin-bottom: 12px;
+    margin-bottom: 10px;
 }
 
-/* SEÇÕES */
+/* SEÇÕES DE CONTEÚDO */
 
 .conteudo {
     background-color: white;
-    padding: 30px;
+    padding: 28px;
     border-radius: 18px;
     margin-bottom: 25px;
     border-left: 5px solid #e8a7c0;
@@ -129,7 +170,7 @@ main {
 
 .conteudo h3 {
     color: #c47b98;
-    margin-bottom: 15px;
+    margin-bottom: 12px;
 }
 
 .conteudo ul {
@@ -147,7 +188,7 @@ main {
     background-color: #fff0f5;
     border-radius: 12px;
     padding: 18px;
-    margin-top: 20px;
+    margin-top: 18px;
 }
 
 .destaque strong {
@@ -179,9 +220,9 @@ main {
     border-radius: 12px;
     background-color: white;
     color: #96516f;
-    font-family: inherit;
+    font-size: 15px;
     cursor: pointer;
-    transition: 0.3s;
+    transition: 0.2s;
 }
 
 .quiz button:hover {
@@ -191,7 +232,7 @@ main {
 
 #resultado {
     margin-top: 15px;
-    font-weight: 600;
+    font-weight: bold;
 }
 
 /* RODAPÉ */
@@ -199,7 +240,7 @@ main {
 footer {
     background-color: #eec2d3;
     text-align: center;
-    padding: 30px 15px;
+    padding: 28px 15px;
     color: #874e67;
 }
 
@@ -207,7 +248,7 @@ footer h2 {
     margin-bottom: 8px;
 }
 
-/* RESPONSIVIDADE */
+/* CELULARES */
 
 @media (max-width: 600px) {
 
@@ -215,67 +256,33 @@ footer h2 {
         font-size: 29px;
     }
 
+    main {
+        padding: 20px 14px;
+    }
+
     .inicio {
-        padding: 35px 20px;
+        padding: 35px 18px;
     }
 
     .inicio h2 {
         font-size: 22px;
     }
 
-    .conteudo {
-        padding: 22px;
+    .conteudo,
+    .introducao {
+        padding: 21px;
     }
 
     nav {
         gap: 8px;
     }
 
-}
-
-/* FERRAMENTAS DE ACESSIBILIDADE */
-
-.acessibilidade {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 12px;
-    margin-top: 20px;
-}
-
-.acessibilidade button {
-    width: 45px;
-    height: 45px;
-    border: none;
-    border-radius: 50%;
-    background-color: white;
-    color: #a34f72;
-    font-size: 17px;
-    font-weight: bold;
-    cursor: pointer;
-    transition: 0.3s;
-}
-
-.acessibilidade button:hover {
-    background-color: #a95176;
-    color: white;
-    transform: scale(1.08);
-}
-
-#estadoLeitura {
-    text-align: center;
-    color: #914d69;
-    font-size: 13px;
-    margin-top: 8px;
-}
-
-@media (max-width: 600px) {
-    .acessibilidade {
-        gap: 8px;
+    nav a {
+        font-size: 12px;
+        padding: 7px 11px;
     }
 
-    .acessibilidade button {
-        width: 42px;
-        height: 42px;
+    .quiz {
+        padding: 22px 16px;
     }
 }
