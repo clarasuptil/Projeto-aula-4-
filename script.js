@@ -1,173 +1,328 @@
-// =====================================
+
+// ==========================================
 // CONECT@ SEGURA
-// LEITURA EM VOZ ALTA PARA CELULAR
-// =====================================
+// LEITURA EM VOZ ALTA E ACESSIBILIDADE
+// ==========================================
 
 let tamanhoFonte = 16;
+
 let lendo = false;
 let pausado = false;
-let partes = [];
+
+let partesTexto = [];
 let indiceParte = 0;
+
 let falaAtual = null;
+let sessaoLeitura = 0;
 
 const botaoOuvir = document.getElementById("ouvirPagina");
 const estadoLeitura = document.getElementById("estadoLeitura");
+const conteudo = document.getElementById("conteudoPrincipal");
 
-// Atualiza o botão
-function atualizarBotao(icone, descricao) {
+// ==========================================
+// ATUALIZA O BOTÃO DE LEITURA
+// ==========================================
+
+function atualizarBotao(icone, descricao, pressionado) {
     botaoOuvir.textContent = icone;
     botaoOuvir.setAttribute("aria-label", descricao);
+    botaoOuvir.setAttribute("aria-pressed", String(pressionado));
 }
 
-// Divide o texto em frases menores
+// ==========================================
+// DIVIDE O TEXTO EM TRECHOS PEQUENOS
+// ==========================================
+
 function dividirTexto(texto) {
-    return texto.match(/[^.!?]+[.!?]+|[^.!?]+$/g) || [];
+
+    const frases = texto.match(/[^.!?]+[.!?]+|[^.!?]+$/g) || [];
+
+    const partes = [];
+
+    frases.forEach(function(frase) {
+
+        const palavras = frase.trim().split(/\s+/);
+        let trecho = "";
+
+        palavras.forEach(function(palavra) {
+
+            if ((trecho + " " + palavra).trim().length > 180) {
+
+                if (trecho) {
+                    partes.push(trecho);
+                }
+
+                trecho = palavra;
+
+            } else {
+
+                trecho = (trecho + " " + palavra).trim();
+
+            }
+
+        });
+
+        if (trecho) {
+            partes.push(trecho);
+        }
+
+    });
+
+    return partes;
 }
 
-// Lê a próxima frase
-function lerProximaParte() {
+// ==========================================
+// FALA O PRÓXIMO TRECHO
+// ==========================================
 
-    if (pausado || !lendo) {
+function falarProximaParte(sessao) {
+
+    if (sessao !== sessaoLeitura || !lendo || pausado) {
         return;
     }
 
-    if (indiceParte >= partes.length) {
+    if (indiceParte >= partesTexto.length) {
         finalizarLeitura();
         return;
     }
 
     falaAtual = new SpeechSynthesisUtterance(
-        partes[indiceParte]
+        partesTexto[indiceParte]
     );
 
     falaAtual.lang = "pt-BR";
-    falaAtual.rate = 1;
+    falaAtual.rate = 0.95;
+    falaAtual.pitch = 1;
 
     falaAtual.onend = function() {
+
+        if (sessao !== sessaoLeitura || pausado || !lendo) {
+            return;
+        }
+
         indiceParte++;
-        lerProximaParte();
+
+        // Pequeno intervalo entre os trechos
+        setTimeout(function() {
+            falarProximaParte(sessao);
+        }, 100);
+
     };
 
-    falaAtual.onerror = function() {
-        if (lendo && !pausado) {
-            estadoLeitura.textContent =
-                "O navegador teve um problema ao ler o texto.";
-            finalizarLeitura();
+    falaAtual.onerror = function(event) {
+
+        if (sessao !== sessaoLeitura || pausado || !lendo) {
+            return;
         }
+
+        if (
+            event.error === "canceled" ||
+            event.error === "interrupted"
+        ) {
+            return;
+        }
+
+        estadoLeitura.textContent =
+            "O navegador não conseguiu continuar a leitura.";
+
+        finalizarLeitura();
     };
 
     speechSynthesis.speak(falaAtual);
 }
 
-// Inicia a leitura
+// ==========================================
+// COMEÇA UMA NOVA LEITURA
+// ==========================================
+
 function iniciarLeitura() {
 
-    const conteudo = document.querySelector("main");
+    if (
+        !("speechSynthesis" in window) ||
+        typeof SpeechSynthesisUtterance === "undefined"
+    ) {
+        estadoLeitura.textContent =
+            "Seu navegador não oferece suporte à leitura em voz alta.";
 
-    partes = dividirTexto(conteudo.innerText);
+        return;
+    }
+
+    partesTexto = dividirTexto(conteudo.innerText);
+
+    if (partesTexto.length === 0) {
+        estadoLeitura.textContent = "Não há conteúdo para ler.";
+        return;
+    }
+
     indiceParte = 0;
     lendo = true;
     pausado = false;
 
+    sessaoLeitura++;
+
+    const sessao = sessaoLeitura;
+
     speechSynthesis.cancel();
 
-    atualizarBotao("⏸️", "Pausar leitura");
-    estadoLeitura.textContent = "Leitura em andamento.";
+    atualizarBotao("⏸️", "Pausar leitura", true);
 
-    lerProximaParte();
+    estadoLeitura.textContent = "Preparando a leitura...";
+
+    // Pequena espera para o Chrome cancelar a fala anterior
+    setTimeout(function() {
+
+        if (sessao === sessaoLeitura && lendo && !pausado) {
+            estadoLeitura.textContent = "Leitura em andamento.";
+            falarProximaParte(sessao);
+        }
+
+    }, 200);
 }
 
-// Pausa a leitura
+// ==========================================
+// PAUSA A LEITURA
+// ==========================================
+
 function pausarLeitura() {
 
     pausado = true;
 
+    // Invalida eventos da fala anterior
+    sessaoLeitura++;
+
+    // Interrompe o trecho atual
     speechSynthesis.cancel();
 
-    atualizarBotao("▶️", "Continuar leitura");
-    estadoLeitura.textContent = "Leitura pausada.";
+    atualizarBotao("▶️", "Continuar leitura", false);
+
+    estadoLeitura.textContent =
+        "Leitura pausada. Ao continuar, o trecho atual será repetido.";
 }
 
-// Continua a leitura
+// ==========================================
+// CONTINUA A LEITURA
+// ==========================================
+
 function continuarLeitura() {
 
     pausado = false;
 
-    atualizarBotao("⏸️", "Pausar leitura");
-    estadoLeitura.textContent = "Leitura em andamento.";
+    // Cria uma nova sessão de leitura
+    sessaoLeitura++;
 
-    lerProximaParte();
+    const sessao = sessaoLeitura;
+
+    // Limpa qualquer fala que tenha ficado na fila
+    speechSynthesis.cancel();
+
+    atualizarBotao("⏸️", "Pausar leitura", true);
+
+    estadoLeitura.textContent = "Continuando a leitura...";
+
+    // Aguarda o Chrome liberar a reprodução
+    setTimeout(function() {
+
+        if (sessao === sessaoLeitura && lendo && !pausado) {
+            estadoLeitura.textContent = "Leitura em andamento.";
+            falarProximaParte(sessao);
+        }
+
+    }, 200);
 }
 
-// Finaliza a leitura
+// ==========================================
+// FINALIZA A LEITURA
+// ==========================================
+
 function finalizarLeitura() {
+
+    sessaoLeitura++;
 
     lendo = false;
     pausado = false;
-    partes = [];
+
+    partesTexto = [];
     indiceParte = 0;
     falaAtual = null;
 
-    speechSynthesis.cancel();
+    atualizarBotao("🔊", "Ouvir página", false);
 
-    atualizarBotao("🔊", "Ouvir página");
     estadoLeitura.textContent = "Leitura finalizada.";
 }
 
-// Controla o botão de som
+// ==========================================
+// CONTROLA O BOTÃO DE SOM
+// ==========================================
+
 botaoOuvir.addEventListener("click", function() {
 
     if (!lendo) {
+
         iniciarLeitura();
+
     } else if (!pausado) {
+
         pausarLeitura();
+
     } else {
+
         continuarLeitura();
+
     }
 
 });
 
-
-// =====================================
-// AUMENTAR E DIMINUIR A FONTE
-// =====================================
+// ==========================================
+// AUMENTA O TAMANHO DO TEXTO
+// ==========================================
 
 document.getElementById("aumentarFonte").addEventListener("click", function() {
 
-    if (tamanhoFonte < 22) {
+    if (tamanhoFonte < 24) {
+
         tamanhoFonte += 2;
-        document.querySelector("main").style.fontSize =
-            tamanhoFonte + "px";
+
+        conteudo.style.fontSize = tamanhoFonte + "px";
+
     }
 
 });
+
+// ==========================================
+// DIMINUI O TAMANHO DO TEXTO
+// ==========================================
 
 document.getElementById("diminuirFonte").addEventListener("click", function() {
 
     if (tamanhoFonte > 14) {
+
         tamanhoFonte -= 2;
-        document.querySelector("main").style.fontSize =
-            tamanhoFonte + "px";
+
+        conteudo.style.fontSize = tamanhoFonte + "px";
+
     }
 
 });
 
+// ==========================================
+// QUIZ DE SEGURANÇA DIGITAL
+// ==========================================
 
-// =====================================
-// QUIZ
-// =====================================
+const respostaErrada = document.getElementById("respostaErrada");
+const respostaCerta = document.getElementById("respostaCerta");
+const resultado = document.getElementById("resultado");
 
-function responder(correta) {
+respostaErrada.addEventListener("click", function() {
 
-    const resultado = document.getElementById("resultado");
+    resultado.textContent =
+        "Ops! Essa pode ser uma tentativa de golpe. Nunca clique sem verificar a mensagem.";
 
-    if (correta) {
-        resultado.textContent =
-            "Muito bem! 💗 Sempre desconfie de mensagens suspeitas e verifique antes de clicar.";
-    } else {
-        resultado.textContent =
-            "Ops! Essa pode ser uma tentativa de golpe. Nunca clique sem verificar a mensagem!";
-    }
+});
 
-}
+respostaCerta.addEventListener("click", function() {
 
+    resultado.textContent =
+        "Muito bem! 💗 Sempre desconfie de mensagens suspeitas e verifique antes de clicar.";
+
+});
+                   
